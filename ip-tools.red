@@ -1,9 +1,14 @@
+Red [
+    Author: "Nikita Korotkin"
+    License: "MIT"
+]
+
 ip-convert: function [
     {Converts between IP-Address representations. Input format
     is recognised automaticly.}
 
     data    "The address to convert."
-    format  "The format to convert to. One of: 'ddr 'cidr 'hex 'bin"
+    format  "The format to convert to. One of: 'ddn 'cidr 'hex 'bin"
 ][
     ;; First we convert the given format to its binary representation
     
@@ -14,7 +19,9 @@ ip-convert: function [
     switch type?/word data [
 
         ;; CIDR
-        integer! [
+        integer! or refinement! [
+            ;; Convert refiment into integer
+            if refinement? data [data: to-integer to-string data]
             ;; Writes as many as 'data' "1" to buffer, and pads it with "0"
             buffer: pad/with append/dup buffer "1" data 32 #"0"
         ]
@@ -29,7 +36,7 @@ ip-convert: function [
             buffer: enbase/base data 2
         ]
 
-        ;; The DDR representation
+        ;; The DDN representation
         tuple! [
             ;; Repeat for all 4 octets of the IP
             repeat index 4 [
@@ -43,7 +50,7 @@ ip-convert: function [
 
     ;; Lookup the format we want to convert to
     switch format [
-        ddr [
+        ddn [
             ;; Define our charset for parsing and buffer
             bin: charset {10}
             tup: make block! 4
@@ -114,6 +121,6 @@ wildcard-of: function [
     ;; Create a buffer for the generated address
     buffer: make string! 32
     ;; Append as many "1" to the buffer as host bits, pad with "0" from left to 32
-    ;; and convert it to DDR
-    ip-convert pad/left/with append/dup buffer "1" host-bits 32 #"0" 'ddr
+    ;; and convert it to DDN
+    ip-convert pad/left/with append/dup buffer "1" host-bits 32 #"0" 'ddn
 ]
