@@ -31,7 +31,7 @@ ip-convert: function [
             buffer: data
         ]
 
-        ;; Hex representation (Yes, Reds binary! datatype should be called hex! instead)
+        ;; Hex representation (Yes, imho Reds binary! datatype should be called hex! instead)
         binary! [
             buffer: enbase/base data 2
         ]
